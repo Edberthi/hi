@@ -1,107 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cacing Simple</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stickman Website</title>
 
-  <style>
-    body {
-      text-align: center;
-      font-family: Arial;
-      background: #111;
-      color: white;
-    }
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    text-align: center;
+  }
 
-    canvas {
-      background: black;
-      margin-top: 10px;
-      display: none;
-    }
+  header {
+    padding: 20px;
+    background: #1f1f1f;
+  }
 
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-  </style>
+  h1 {
+    color: #00ffcc;
+  }
+
+  .stickman {
+    margin: 40px auto;
+  }
+
+  /* Stickman drawing */
+  .head {
+    width: 60px;
+    height: 60px;
+    border: 4px solid white;
+    border-radius: 50%;
+    margin: auto;
+  }
+
+  .body {
+    width: 4px;
+    height: 80px;
+    background: white;
+    margin: auto;
+  }
+
+  .arms {
+    width: 100px;
+    height: 4px;
+    background: white;
+    margin: auto;
+    position: relative;
+    top: -60px;
+  }
+
+  .legs {
+    width: 80px;
+    height: 4px;
+    background: white;
+    margin: auto;
+    position: relative;
+    top: 20px;
+    transform: rotate(30deg);
+  }
+
+  .legs::after {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 4px;
+    background: white;
+    transform: rotate(-60deg);
+    left: 0;
+  }
+
+  .card {
+    background: #1a1a1a;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    background: #00ffcc;
+    color: black;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+</style>
 </head>
 
 <body>
 
-<h1>🐍 Cacing Simple</h1>
-<button onclick="start()">START</button>
-<p id="score">Score: 0</p>
+<header>
+  <h1>🧍 Stickman World</h1>
+  <p>Welcome to my simple website</p>
+</header>
 
-<canvas id="game" width="300" height="300"></canvas>
+<div class="stickman">
+  <div class="head"></div>
+  <div class="body"></div>
+  <div class="arms"></div>
+  <div class="legs"></div>
+</div>
+
+<div class="card">
+  <h2>Hello 👋</h2>
+  <p>This is a simple stickman website using only HTML & CSS.</p>
+  <button onclick="hello()">Click Me</button>
+</div>
 
 <script>
-let canvas = document.getElementById("game");
-let ctx = canvas.getContext("2d");
-
-let snake, food, dx, dy, score;
-let grid = 20;
-
-function start(){
-  canvas.style.display = "block";
-
-  snake = [{x:160, y:160}];
-  dx = grid;
-  dy = 0;
-  food = {x:100, y:100};
-  score = 0;
-  document.getElementById("score").innerText = "Score: 0";
-
-  game();
+function hello(){
+  alert("Hello from Stickman 😎");
 }
-
-function game(){
-  requestAnimationFrame(game);
-
-  ctx.clearRect(0,0,300,300);
-
-  let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-
-  // wall
-  if(head.x < 0) head.x = 280;
-  if(head.y < 0) head.y = 280;
-  if(head.x > 280) head.x = 0;
-  if(head.y > 280) head.y = 0;
-
-  snake.unshift(head);
-
-  // eat
-  if(head.x === food.x && head.y === food.y){
-    score++;
-    document.getElementById("score").innerText = "Score: " + score;
-    food.x = Math.floor(Math.random()*15)*20;
-    food.y = Math.floor(Math.random()*15)*20;
-  } else {
-    snake.pop();
-  }
-
-  // crash
-  for(let i=1;i<snake.length;i++){
-    if(head.x === snake[i].x && head.y === snake[i].y){
-      alert("Game Over");
-      return;
-    }
-  }
-
-  // draw
-  ctx.fillStyle = "red";
-  ctx.fillRect(food.x, food.y, 18, 18);
-
-  ctx.fillStyle = "lime";
-  snake.forEach(s => ctx.fillRect(s.x, s.y, 18, 18));
-}
-
-// keyboard
-document.addEventListener("keydown", e=>{
-  if(e.key==="ArrowLeft" && dx===0){ dx=-grid; dy=0; }
-  if(e.key==="ArrowRight" && dx===0){ dx=grid; dy=0; }
-  if(e.key==="ArrowUp" && dy===0){ dx=0; dy=-grid; }
-  if(e.key==="ArrowDown" && dy===0){ dx=0; dy=grid; }
-});
 </script>
 
 </body>
