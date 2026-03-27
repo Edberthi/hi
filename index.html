@@ -2,39 +2,122 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CACING MOBILE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CACING FIXED</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
-
 body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  color: white;
+  margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family:sans-serif;
+  color:white;
 }
 
 .container {
-  text-align: center;
-  backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
-  border-radius: 20px;
-  width: 95%;
-  max-width: 420px;
+  text-align:center;
 }
 
-h1 {
-  color: #00ffd5;
-  margin-bottom: 10px;
+canvas {
+  background:#000;
+  border-radius:10px;
 }
+
+.controls button {
+  width:60px;
+  height:60px;
+  margin:5px;
+  font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Score: <span id="score">0</span></h2>
+  <canvas id="game" width="300" height="300"></canvas>
+
+  <div class="controls">
+    <div><button onclick="dir(0,-1)">↑</button></div>
+    <div>
+      <button onclick="dir(-1,0)">←</button>
+      <button onclick="dir(1,0)">→</button>
+    </div>
+    <div><button onclick="dir(0,1)">↓</button></div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const scoreEl = document.getElementById("score");
+
+let grid = 20;
+let snake, food, dx, dy, score;
+
+function init(){
+  snake = [{x:160,y:160}];
+  dx = grid; dy = 0;
+  food = {x:100,y:100};
+  score = 0;
+}
+
+function dir(x,y){
+  if(x && dx===0){ dx=x*grid; dy=0; }
+  if(y && dy===0){ dx=0; dy=y*grid; }
+}
+
+function loop(){
+  requestAnimationFrame(loop);
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  let head = {x:snake[0].x+dx, y:snake[0].y+dy};
+
+  if(head.x<0) head.x=canvas.width-grid;
+  if(head.y<0) head.y=canvas.height-grid;
+  if(head.x>=canvas.width) head.x=0;
+  if(head.y>=canvas.height) head.y=0;
+
+  snake.unshift(head);
+
+  if(head.x===food.x && head.y===food.y){
+    score++;
+    scoreEl.innerText = score;
+    food.x = Math.floor(Math.random()*15)*grid;
+    food.y = Math.floor(Math.random()*15)*grid;
+  } else {
+    snake.pop();
+  }
+
+  // collision
+  for(let i=1;i<snake.length;i++){
+    if(head.x===snake[i].x && head.y===snake[i].y){
+      alert("Game Over");
+      init();
+    }
+  }
+
+  // draw
+  ctx.fillStyle="red";
+  ctx.fillRect(food.x,food.y,grid-2,grid-2);
+
+  ctx.fillStyle="lime";
+  snake.forEach(s=>{
+    ctx.fillRect(s.x,s.y,grid-2,grid-2);
+  });
+}
+
+init();
+loop();
+</script>
+
+</body>
+</html>}
 
 /* buttons */
 button {
